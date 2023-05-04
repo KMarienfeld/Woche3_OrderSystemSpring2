@@ -104,4 +104,39 @@ class ShopControllerTest {
         );
 
     }
+    @Test
+    void getAllOrders_withTwoOrders() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/orders/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("[1]"));
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/orders/2")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("[1]"));
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/orders"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+             [
+                 {
+                     "id": 1,
+                     "products": [
+                         {
+                             "id": 1,
+                             "name": "Apfel"
+                         }
+                     ]
+                 },
+                 {
+                     "id": 2,
+                     "products": [
+                         {
+                             "id": 1,
+                             "name": "Apfel"
+                         }
+                     ]
+                 }
+             ]
+
+"""));
+    }
+
 }
